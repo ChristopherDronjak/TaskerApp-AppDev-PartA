@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:TaskApp.Converter"
+             x:Class="TaskApp.MVVM.Views.MainView"
+             Title="Tasker App"
+             BackgroundColor="GreenYellow">
+    <!--Above contains title for app-->
+
+    <ContentPage.Resources>
+        <converters:ColorConverter x:Key="ColorConverter"/>
+    </ContentPage.Resources>
+
+    <Grid Margin="16" RowDefinitions=".1*,.3*,.7*">
+        <Label Text="Lets be productive today!" StyleClass="dark, Header"/>
+        <!--Grid with layout for the Categories-->
+        <Grid Grid.Row="1" RowDefinitions=".2*,.8*">
+            <Label StyleClass="White, SubHeader" Text="Activities to focus on!"/>
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Categories}">
+                <!--binds public Category class varibles to the view-->
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="5" Orientation="Horizontal"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10">
+                            <RoundRectangle />
+                            <!--Vertical Stack Layout that can scroll through all the categories-->
+                            <VerticalStackLayout Spacing="10" Padding="15" BackgroundColor="Gainsboro">
+                                <Label StyleClass="LightBlue" TextColor="Black">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <!--Displays how many tasks are done -->
+                                            <Span Text="{Binding tasksUncompleted}" FontAttributes="None" />
+                                            <!--binds public Category class variable from class to bind to the UI-->
+                                            <Span Text="/" FontAttributes="None" />
+                                            <!--Displays the total amount of tasks for the category-->
+                                            <Span Text="{Binding tasks_total}" FontAttributes="None" />
+                                            <!--binds public Category class variable from class to bind to the UI-->
+                                            <Span Text=" tasks remaining" FontAttributes="None" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label StyleClass="DarkBlue, CardTitle" Text="{Binding catName}"/>
+                                <!--binds public Category class variable from class to bind to the UI-->
+                                <!--Progress bar displaying the current progress on tasks for the associated category-->
+                                <ProgressBar Progress="{Binding percent}" ProgressColor="{Binding colour, Converter={StaticResource ColorConverter}}"/>
+                                <!--also contains colour converter for the colour associated to the categorys-->
+                                <!--binds public Category class variables from class to bind to the UI-->
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        <!--Grid with frame and layout for checkboxes-->  
+        <Grid Grid.Row="2" RowDefinitions=".2*,.8*">
+            <Label StyleClass="LightBlue, SubHeader" Text="Complete these tasks!" TextColor="Black"/>
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}" ItemsUpdatingScrollMode="KeepLastItemInView">
+                <!--binds public Task class varibles to the view-->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Black" BackgroundColor="Gainsboro">
+                            <HorizontalStackLayout>
+                                <!--Checkboxes displaying the pending tasks-->
+                                <CheckBox x:Name="checkBox" VerticalOptions="Center" CheckedChanged="checkbox_check" IsChecked="{Binding finished}" 
+                                          Color="{Binding colourTask, Converter={StaticResource ColorConverter}}"/>
+                                <!--binds public Task class variable from class to bind to the UI-->
+                                <Label Text="{Binding nameTask}" VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger Binding="{Binding Source={x:Reference checkBox}, Path=IsChecked}" TargetType="Label" Value="True">
+                                            <!--binds public Task class variable from class to bind to the UI-->
+                                            <!--Strikesthrough the task when they are checked off-->
+                                            <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        <!--button to go to 2nd page where users can add new tasks and categorys to the main page-->
+        <Button Grid.Row="2" x:Name="addingnewtasks_btn" Text="Add Items" FontSize="12" Clicked="addingnewtasks_btn_Clicked" BackgroundColor="Black" 
+                HeightRequest="80" WidthRequest="85" VerticalOptions="End" HorizontalOptions="End"/>
+    </Grid>
+</ContentPage>

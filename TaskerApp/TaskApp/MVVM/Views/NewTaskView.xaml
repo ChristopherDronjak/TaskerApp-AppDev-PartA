@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskApp.MVVM.Views.NewTaskView"
+             Title="Add New Task"
+             BackgroundColor="GreenYellow">
+
+    <Grid RowDefinitions=".2*, .7*, .1*">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <!--title of page-->
+        <!--In entry field users can type text for a new task-->
+        <Entry Placeholder="Type new task here!" Text="{Binding Task}" Style="{StaticResource Task}"/>
+        <CollectionView Grid.Row="1" Margin="15" ItemsSource="{Binding Categories}">
+            <!--binds public Category class varibles to the view-->
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout HorizontalItemSpacing="5" Orientation="Vertical" Span="1" VerticalItemSpacing="5"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <!--Frame displaying all existing categories-->
+                    <Frame BackgroundColor="Gainsboro" Padding="50">
+                        <!--Users must click on the radio buttons to select a current category that they want to add tasks to-->
+                        <RadioButton Content="{Binding catName}" GroupName="Category" IsChecked="{Binding currentSelect}" WidthRequest="100"/>
+                        <!--binds public Category class variable from class to bind to the UI-->
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <HorizontalStackLayout Grid.Row="2" Margin="10" Spacing="15" VerticalOptions="Center" HorizontalOptions="Center"/>
+        <!--two buttons, one is to add tasks and one is to add categorys-->
+        <Button Grid.Row="0" Grid.Column="1" x:Name="addCategory_btn" CornerRadius="100" Text="Add Category" Clicked="addCategory_btn_Clicked" BackgroundColor="Black" 
+                HeightRequest="40" WidthRequest="120" />
+        <Button Grid.Row="1" Grid.Column="1" x:Name="addTask_btn" CornerRadius="100" Text="Add Task" Clicked="addTask_btn_Clicked" BackgroundColor="Black" 
+                HeightRequest="50" WidthRequest="120"/>
+    </Grid>
+</ContentPage>
